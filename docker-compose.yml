@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=654321Ab
+      - MYSQL_PASSWORD=654321Ab
+      - MYSQL_DATABASE=ncdb
+      - MYSQL_USER=aareez
+
+  app:
+    image: nextcloud:apache
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - VIRTUAL_HOST=vchat.iowa
+      - LETSENCRYPT_HOST=vchat.iowa
+      - MYSQL_HOST=db
+      - MYSQL_PASSWORD=654321Ab
+      - MYSQL_DATABASE=ncdb
+      - MYSQL_USER=aareez
+    depends_on:
+      - db
+    networks:
+      - mongonet
+      - default
+
+volumes:
+  db:
+  nextcloud:
+  html:
+
+networks:
+  mongonet:
