@@ -1,35 +1,40 @@
 version: '3'
 
 services:
-  db:
+  iowa-vchat-db:
+    container_name: iowa-vchat-db
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
       - db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=654321Ab
-      - MYSQL_PASSWORD=654321Ab
-      - MYSQL_DATABASE=ncdb
-      - MYSQL_USER=aareez
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=root
+    networks:
+      - mongonet
 
-  app:
-    image: nextcloud:apache
+  vchat.iowa.dockerfully.com:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    container_name: vchat.iowa
+    image: mountain/nextcloud
     restart: always
+    ports:
+      - '9999:9999'
     volumes:
       - nextcloud:/var/www/html
     environment:
-      - VIRTUAL_HOST=vchat.iowa
-      - LETSENCRYPT_HOST=vchat.iowa
-      - MYSQL_HOST=db
-      - MYSQL_PASSWORD=654321Ab
-      - MYSQL_DATABASE=ncdb
-      - MYSQL_USER=aareez
+      - VIRTUAL_HOST=vchat.iowa.dockerfully.com
+      - LETSENCRYPT_HOST=vchat.iowa.dockerfully.com
+      - MYSQL_HOST=iowa-vchat-db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=root
     depends_on:
-      - db
+      - iowa-vchat-db
     networks:
       - mongonet
-      - default
 
 volumes:
   db:
@@ -38,3 +43,4 @@ volumes:
 
 networks:
   mongonet:
+    external: true
