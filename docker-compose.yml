@@ -7,9 +7,10 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
-      - db:/var/lib/mysql
+      - db-iowa:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_USER=root
     networks:
       - mongonet
@@ -24,10 +25,11 @@ services:
     ports:
       - '9999:9999'
     volumes:
-      - nextcloud:/var/www/html
+      - nextcloud-iowa:/var/www/html
     environment:
       - VIRTUAL_HOST=vchat.iowa.dockerfully.com
       - LETSENCRYPT_HOST=vchat.iowa.dockerfully.com
+      - VIRTUAL_PORT=9999
       - MYSQL_HOST=iowa-vchat-db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=root
@@ -37,8 +39,8 @@ services:
       - mongonet
 
 volumes:
-  db:
-  nextcloud:
+  db-iowa:
+  nextcloud-iowa:
   html:
 
 networks:
