@@ -11,4 +11,4 @@ RUN /usr/sbin/a2enmod ssl
 #RUN chown -R www-data:www-data /var/www/html/data
 COPY ports.conf /etc/apache2
 
-EXPOSE 9999
+EXPOSE 8888

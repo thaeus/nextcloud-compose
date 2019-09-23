@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  iowa-vchat-db:
-    container_name: iowa-vchat-db
+  chicago-vchat-db:
+    container_name: chicago-vchat-db
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
-      - db-iowa:/var/lib/mysql
+      - db-chicago:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -15,32 +15,32 @@ services:
     networks:
       - mongonet
 
-  vchat.iowa.dockerfully.com:
+  vchat.chicago.dockerfully.com:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-    container_name: vchat.iowa
+    container_name: vchat.chicago
     image: mountain/nextcloud
     restart: always
     ports:
-      - '9999:9999'
+      - '8888:8888'
     volumes:
-      - nextcloud-iowa:/var/www/html
+      - nextcloud-chicago:/var/www/html
     environment:
-      - VIRTUAL_HOST=vchat.iowa.dockerfully.com
-      - LETSENCRYPT_HOST=vchat.iowa.dockerfully.com
-      - VIRTUAL_PORT=9999
-      - MYSQL_HOST=iowa-vchat-db
+      - VIRTUAL_HOST=vchat.chicago.dockerfully.com
+      - LETSENCRYPT_HOST=vchat.chicago.dockerfully.com
+      - VIRTUAL_PORT=8888
+      - MYSQL_HOST=chicago-vchat-db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=root
     depends_on:
-      - iowa-vchat-db
+      - chicago-vchat-db
     networks:
       - mongonet
 
 volumes:
-  db-iowa:
-  nextcloud-iowa:
+  db-chicago:
+  nextcloud-chicago:
   html:
 
 networks:
