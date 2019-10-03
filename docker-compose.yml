@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  chicago-vchat-db:
-    container_name: chicago-vchat-db
+  rocks-vchat-db:
+    container_name: rocks-vchat-db
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
-      - db-chicago:/var/lib/mysql
+      - db-rocks:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -15,32 +15,32 @@ services:
     networks:
       - mongonet
 
-  vchat.chicago.dockerfully.com:
+  vchat.frickin.rocks:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-    container_name: vchat.chicago
-    image: mountain/nextcloud
+    container_name: vchat.rocks
+    image: rocks/nextcloud
     restart: always
     ports:
-      - '8888:8888'
+      - '7777:7777'
     volumes:
-      - nextcloud-chicago:/var/www/html
+      - nextcloud-rocks:/var/www/html
     environment:
-      - VIRTUAL_HOST=vchat.chicago.dockerfully.com
-      - LETSENCRYPT_HOST=vchat.chicago.dockerfully.com
-      - VIRTUAL_PORT=8888
-      - MYSQL_HOST=chicago-vchat-db
+      - VIRTUAL_HOST=vchat.frickin.rocks
+      - LETSENCRYPT_HOST=vchat.frickin.rocks
+      - VIRTUAL_PORT=7777
+      - MYSQL_HOST=rocks-vchat-db
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=root
     depends_on:
-      - chicago-vchat-db
+      - rocks-vchat-db
     networks:
       - mongonet
 
 volumes:
-  db-chicago:
-  nextcloud-chicago:
+  db-rocks:
+  nextcloud-rocks:
   html:
 
 networks:
